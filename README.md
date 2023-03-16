@@ -4,17 +4,17 @@
 ```
 Tenant
 |__ AP
-	|__ EPG
-		| Physical Domain
-		| Static Ports
-		| Provided Contract
+  |__ EPG
+    | Physical Domain
+    | Static Ports
+    | Provided Contract
 |__ Bridge Domain
-	| Subnet (public)
-	| L3Out
+  | Subnet (public)
+  | L3Out
 | VRF
 |__ L3Out (OSPF)
-	|__ Logical Node Profile
-		| Logical Interface Profile
-	|__ External EPG
-		| Consumed Contract
+  |__ Logical Node Profile
+    | Logical Interface Profile
+  |__ External EPG
+    | Consumed Contract
 ```
