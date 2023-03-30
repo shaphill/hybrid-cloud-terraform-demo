@@ -1,5 +1,7 @@
-# aci-vpc-project
-
+# Terraform with Cisco ACI Demo
+This Terraform configuration creates a tenant, VRF, bridge domain, application profile, EPG, L3Out, and contract to enable communication between a host and endpoint across an ACI fabric.
+ 
+![Topology](imgs/topology.png)
 ## ACI Tenant Object Hierarchy
 ```
 Tenant
