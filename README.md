@@ -38,3 +38,18 @@ Tenant                            | aci_tenant
 <p align="center">
 <img src="imgs/l3outvis.png" alt= "">
 </p>
+
+## Usage
+This demo has been tested with Terraform version 1.3.1 and Cisco ACI provider version 2.6.1
+
+To run the demo, first download the code and change host parameters to your environment. 
+```
+terraform init
+terraform plan
+terraform apply
+```
+
+To undeploy configuration, 
+```
+terraform destroy
+```
