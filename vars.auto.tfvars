@@ -1,7 +1,7 @@
 user = {
-  username = "admin"
-  password = "ins3965!"
-  url      = "https://esc-aci-network:8041"
+  username = "ADMIN"
+  password = "PASSWORD"
+  url      = "HOSTNAME"
 }
 
 phys-domain = "sp-phys"
