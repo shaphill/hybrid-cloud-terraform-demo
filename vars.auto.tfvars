@@ -1,11 +1,11 @@
 user = {
-  username = "ADMIN"
-  password = "PASSWORD"
-  url      = "HOSTNAME"
+  username = "admin"
+  password = "ins3965!"
+  url      = "https://esc-aci-network:8041"
 }
 
 phys-domain = "sp-phys"
-tenant      = "sp-lab"
+tenant      = "sp-l3out-demo"
 ap          = "lab"
 vrf         = "v1"
 bd = {
@@ -33,8 +33,6 @@ l3out = {
   int_prof  = "l3-ospf_vpcIpv4"
 }
 
-ext_subs = ["0.0.0.0/0", "10.0.1.0/24"]
-
 nodes = {
   "103" = {
     name   = "topology/pod-1/node-103"
@@ -56,6 +54,8 @@ vpc_members = {
     addr = "10.0.1.3/24"
   }
 }
+
+ext_subs = ["0.0.0.0/0", "10.0.1.0/24"]
 
 static_path = {
   path  = "topology/pod-1/protpaths-101-102/pathep-[sp-vpc]"

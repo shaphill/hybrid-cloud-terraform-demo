@@ -2,7 +2,6 @@ terraform {
   required_providers {
     aci = {
       source = "CiscoDevNet/aci"
-      version = "2.6.1"
     }
   }
 }
@@ -16,6 +15,10 @@ provider "aci" {
 
 data "aci_physical_domain" "phys" {
   name = var.phys-domain
+}
+
+data "aci_l3_domain_profile" "l3-domain" {
+  name = var.l3out.domain
 }
 
 resource "aci_tenant" "tenant" {
@@ -36,7 +39,7 @@ resource "aci_bridge_domain" "bd" {
   tenant_dn                = aci_tenant.tenant.id
   name                     = var.bd.name
   relation_fv_rs_ctx       = aci_vrf.vrf.id
-  relation_fv_rs_bd_to_out = [module.l3out.id]
+  relation_fv_rs_bd_to_out = [module.l3out_ospf.l3out_dn]
 }
 
 resource "aci_subnet" "subnet" {
@@ -89,22 +92,68 @@ resource "aci_epg_to_static_path" "epg_path" {
   encap              = var.static_path.encap
 }
 
-module "l3out" {
-  source = "./modules/l3out"
+module "l3out_ospf" {
+  source       = "./modules/l3out"
+  tenant_dn    = aci_tenant.tenant.id
+  name         = "l3-ospf"
+  description  = "Created by l3out module"
+  vrf_dn       = aci_vrf.vrf.id
+  l3_domain_dn = data.aci_l3_domain_profile.l3-domain.id
 
-  tenant_id         = aci_tenant.tenant.id
-  l3domain          = var.l3out.domain
-  l3out             = var.l3out.name
-  l3epg             = var.l3out.epg
-  l3path            = var.l3out.path
-  encap             = var.l3out.encap
-  ext_subnets       = var.ext_subs
-  node_profile      = var.l3out.node_prof
-  interface_profile = var.l3out.int_prof
-  nodes             = var.nodes
-  vpc_members       = var.vpc_members
-  contract_id       = aci_contract.contract.id
-  vrf_id            = aci_vrf.vrf.id
+  ospf = {
+    area_id   = "0"
+    area_type = "regular"
+  }
+
+  vpcs = [
+    {
+      ospf_interface_profile = {
+      }
+      pod_id = 1
+      nodes = [
+        {
+          node_id            = "103"
+          router_id          = "103.103.103.103"
+          router_id_loopback = "yes"
+        },
+        {
+          node_id            = "104"
+          router_id          = "104.104.104.104"
+          router_id_loopback = "yes"
+        }
+      ]
+      interfaces = [
+        {
+          channel = "sp-vpc"
+          vlan    = "107"
+          mtu     = "1500"
+          side_a = {
+            ip = "10.0.1.2/24"
+          }
+          side_b = {
+            ip = "10.0.1.3/24"
+          }
+        }
+      ]
+    }
+  ]
+
+  external_epgs = [
+    {
+      name = "l3-ospf-epg"
+      consumed_contracts = [
+        aci_contract.contract.id
+      ]
+      subnets = [
+        {
+          ip    = "0.0.0.0/0"
+          scope = ["import-security"]
+        },
+        {
+          ip    = "10.0.1.0/24"
+          scope = ["import-security"]
+        }
+      ]
+    }
+  ]
 }
-
-
